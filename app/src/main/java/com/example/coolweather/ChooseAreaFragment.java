@@ -18,11 +18,10 @@ import com.coolweather.android.R;
 import com.example.coolweather.db.City;
 import com.example.coolweather.db.County;
 import com.example.coolweather.db.Province;
-import com.example.coolweather.gson.Weather;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -115,8 +114,8 @@ public class ChooseAreaFragment extends Fragment {
     private void queryProvinces() {
         titleText.setText("中国");
         backButton.setVisibility(View.GONE);
-        provinceList = DataSupport.findAll(Province.class);
-        if (provinceList.size()>0){
+        provinceList = LitePal.findAll(Province.class);
+        if (provinceList.size() > 0) {
             dataList.clear();
             for (Province province:provinceList){
                 dataList.add(province.getProvinceName());
@@ -134,7 +133,7 @@ public class ChooseAreaFragment extends Fragment {
         titleText.setText(selectedProvince.getProvinceName());  //设置市的标题内容
         backButton.setVisibility(View.VISIBLE);  //设置返回按钮可见
         //查询被选中的省份城市的市区
-        cityList = DataSupport.where("provinceid=?",String.valueOf(selectedProvince.getId())).find(City.class);
+        cityList = LitePal.where("provinceid=?",String.valueOf(selectedProvince.getId())).find(City.class);
         if (cityList.size() > 0){ //如果省列表不为空，则...
             dataList.clear();
             for (City city:cityList){ //遍历每一份省的市级城市
@@ -152,7 +151,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCounties() {
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countyList = DataSupport.where("cityid = ?", String.valueOf(selectedCity.getId())).find(County.class);
+        countyList = LitePal.where("cityid = ?", String.valueOf(selectedCity.getId())).find(County.class);
         if (countyList.size() > 0){
             dataList.clear();
             for (County county:countyList){
