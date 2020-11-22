@@ -20,7 +20,7 @@ public class County extends LitePalSupport {
     public void setCountyName(String countyName) {
         this.countyName = countyName;
     }
-    public Object getWeatherId() {
+    public String getWeatherId() {
         return weatherId;
     }
     public void setWeatherId(String weatherId) {

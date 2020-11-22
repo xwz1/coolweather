@@ -2,12 +2,15 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.coolweather.MainActivity"
+    class="com.example.coolweather.ChooseAreaFragment"
+    android:id="@+id/activity_main"
+    tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <fragment
         android:id="@+id/choose_area_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        class="com.example.coolweather.ChooseAreaFragment"
         android:name = "com.example.coolweather.ChooseAreaFragment" />
 </FrameLayout>

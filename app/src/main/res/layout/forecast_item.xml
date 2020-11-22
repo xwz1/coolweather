@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.coolweather.MainActivity"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="15dp">
@@ -27,7 +26,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="right"
-        android:textColor="#fff"/>
+        android:textColor="#fff" />
     <TextView
         android:id="@+id/min_text"
         android:layout_width="0dp"
@@ -35,6 +34,6 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="right"
-        android:textColor="#fff"/>
+        android:textColor="#fff" />
 
 </LinearLayout>

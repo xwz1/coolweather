@@ -2,7 +2,6 @@ package com.example.coolweather.db;
 
 import org.litepal.crud.LitePalSupport;
 
-;
 
 public class Province extends LitePalSupport {
     private int id;//每个实体类都有的字段

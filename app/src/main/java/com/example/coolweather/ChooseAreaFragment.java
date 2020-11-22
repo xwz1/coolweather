@@ -1,6 +1,8 @@
 package com.example.coolweather;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coolweather.android.R;
+
 import com.example.coolweather.db.City;
 import com.example.coolweather.db.County;
 import com.example.coolweather.db.Province;
@@ -26,6 +28,7 @@ import org.litepal.LitePal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,9 +39,7 @@ public class ChooseAreaFragment extends Fragment {
     public static final int LEVEL_PROVINCE=0;
     public static final int LEVEL_CITY=1;
     public static final int LEVEL_COUNTY=2;
-
-    private ProgressDialog progressDialog;
-
+    private Dialog alertDialog;
     private TextView titleText;
 
     private Button backButton;
@@ -47,7 +48,7 @@ public class ChooseAreaFragment extends Fragment {
 
     private ArrayAdapter<String> adapter;
 
-    private List<String> dataList = new ArrayList<>();
+    private final List<String> dataList = new ArrayList<>();
     private List<Province> provinceList;//省列表
     private List<City> cityList;//市列表
     private List<County> countyList ;//县列表
@@ -59,11 +60,11 @@ public class ChooseAreaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.choose_area,container,false);
-        titleText = (TextView)view.findViewById(R.id.title_text);  //获取标题栏文本id
-        backButton = (Button) view.findViewById(R.id.back_button);  //获取标题栏id
-        listView = (ListView)view.findViewById(R.id.list_view);    //获取Item列表id
+        titleText = view.findViewById(R.id.title_text);  //获取标题栏文本id
+        backButton = view.findViewById(R.id.back_button);  //获取标题栏id
+        listView = view.findViewById(R.id.list_view);    //获取Item列表id
         //获取ArrayAdapter对象
-        adapter =new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dataList);
+        adapter =new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);//设置并初始化适配器
         return view;//将视图返回
     }
@@ -92,7 +93,7 @@ public class ChooseAreaFragment extends Fragment {
                     }else if (getActivity() instanceof  WeatherActivity){
                         WeatherActivity activity = (WeatherActivity) getActivity();
                         activity.drawerLayout.closeDrawers();
-                        activity.swipeRefresh.setRefreshing(true);
+                        activity.swipeRefreshLayout.setRefreshing(true);
                         activity.requestWeather(weatherId);
                     }
 
@@ -133,7 +134,7 @@ public class ChooseAreaFragment extends Fragment {
         titleText.setText(selectedProvince.getProvinceName());  //设置市的标题内容
         backButton.setVisibility(View.VISIBLE);  //设置返回按钮可见
         //查询被选中的省份城市的市区
-        cityList = LitePal.where("provinceid=?",String.valueOf(selectedProvince.getId())).find(City.class);
+        cityList = LitePal.where("provinceid = ?",String.valueOf(selectedProvince.getId())).find(City.class);
         if (cityList.size() > 0){ //如果省列表不为空，则...
             dataList.clear();
             for (City city:cityList){ //遍历每一份省的市级城市
@@ -169,14 +170,14 @@ public class ChooseAreaFragment extends Fragment {
     }
     /*根据传入的地址和类型从服务器查询省市县数据*/
     private void queryFromServer(String address,final String type){
-        showProgressDialog();
+        showAlertDialog();
         HttpUtil.sendOKHttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new Runnable() {
+                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeProgressDialog();
+                        closeAlertDialog();
                         Toast.makeText(getContext(),"加载失败",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -194,10 +195,10 @@ public class ChooseAreaFragment extends Fragment {
                     result = Utility.handleCountyResponse(responseText,selectedCity.getId());
                 }
                 if (result){
-                    getActivity().runOnUiThread(new Runnable() {
+                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            closeProgressDialog();
+                            closeAlertDialog();
                             if ("province".equals(type)){
                                 queryProvinces();
                             }else if ("city".equals(type)){
@@ -212,19 +213,20 @@ public class ChooseAreaFragment extends Fragment {
         });
     }
     /*显示进度对话框*/
-    private void showProgressDialog() {
-        if (progressDialog==null){
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在加载...");
-            progressDialog.setCanceledOnTouchOutside(false);
+    private void showAlertDialog() {
+        if (alertDialog==null){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            alertDialog.show();
+            alertDialog.setMessage("正在加载...");
+            alertDialog.setCancelable(false);
 
         }
-        progressDialog.show();
     }
     /*关闭进度对话框*/
-    private void closeProgressDialog() {
-        if (progressDialog!=null){
-            progressDialog.dismiss();
+    private void closeAlertDialog() {
+        if (alertDialog!=null){
+            alertDialog.dismiss();
         }
     }
+
 }

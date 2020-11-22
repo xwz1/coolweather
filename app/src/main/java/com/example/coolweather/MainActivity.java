@@ -8,7 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.coolweather.android.R;
+import com.example.coolweather.R;
+
 
 public class MainActivity extends AppCompatActivity {
 
